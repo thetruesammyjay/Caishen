@@ -1,0 +1,27 @@
+{
+  "name": "caishen",
+  "version": "1.0.0",
+  "description": "Agentic wallet infrastructure for the Multi-Chain Economy (Umbrella package)",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "caishen": "./bin/caishen.js"
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@caishen/core": "workspace:*",
+    "@caishen/cli": "workspace:*",
+    "@caishen/sdk": "workspace:*",
+    "caishen-wallet": "workspace:*",
+    "caishen-swap": "workspace:*",
+    "caishen-lending": "workspace:*"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.2",
+    "typescript": "^5.4.5"
+  }
+}

@@ -1,0 +1,33 @@
+---
+title: Security
+description: Key handling, policy controls, and operational safeguards.
+---
+
+## Key handling
+
+- Mnemonic payloads are stored encrypted at rest
+- Decryption occurs only at runtime for signing flows
+- Seed phrases and private keys must never be logged or committed
+
+## Policy controls
+
+Caishen supports controls including:
+
+- per-tx / per-hour / per-day spending limits
+- recipient allow/block lists
+- chain allow/block lists
+- active time windows
+- global pause/resume
+
+## Logging
+
+Activity logs are append-only JSON lines under `~/.caishen/activity.log` for auditable traces.
+
+## Operational recommendations
+
+- Use dedicated runtime users for production
+- Keep strict filesystem permissions for runtime config
+- Require human confirmation for all value-moving actions
+- Prefer quote/preflight before execute
+
+For detail, see [SECURITY.md](../SECURITY.md) and [POLICY.md](../POLICY.md).

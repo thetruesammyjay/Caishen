@@ -1,0 +1,13 @@
+---
+title: SDK Integration
+description: Applying policy checks in SDK/core execution paths.
+---
+
+Policy wrapping is implemented in core and consumed by SDK/skills.
+
+Reference implementation:
+
+- [packages/core/src/policy-engine.ts](../../packages/core/src/policy-engine.ts)
+- [packages/sdk/src/index.ts](../../packages/sdk/src/index.ts)
+
+Guideline: all write operations must flow through policy checks before adapter execute.

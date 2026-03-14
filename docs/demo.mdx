@@ -1,0 +1,26 @@
+---
+title: Demo
+description: Run the Caishen demo agent workflow.
+---
+
+The demo agent executes wallet + protocol quote operations and writes lifecycle events.
+
+## Run
+
+```bash
+pnpm --filter @caishen/demo-agent start
+```
+
+## Observe
+
+```bash
+caishen monitor --tail 20
+```
+
+## Outputs
+
+- Session lifecycle events (`agent.start`, `agent.round`, `agent.end`)
+- Wallet and protocol operation traces
+- Chain-scoped runtime metadata
+
+See [demo/README.md](../demo/README.md) and [walkthrough.md](../walkthrough.md).

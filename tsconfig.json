@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "jsx": "react-jsx",
+    "declaration": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "paths": {
+      "@caishen/core": ["packages/core/src/index.ts"],
+      "@caishen/cli": ["packages/cli/src/index.ts"],
+      "@caishen/sdk": ["packages/sdk/src/index.ts"],
+      "@caishen/monitor": ["packages/monitor/src/index.ts"],
+      "caishen-wallet": ["packages/skills/caishen-wallet/src/index.ts"]
+    }
+  },
+  "include": ["packages/*/src/**/*", "packages/skills/*/src/**/*"],
+  "exclude": ["node_modules", "dist", "packages/monitor/src/**/*"]
+}

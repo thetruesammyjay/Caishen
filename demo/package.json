@@ -1,0 +1,21 @@
+{
+  "name": "@caishen/demo-agent",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Reference autonomous agent workflow for Caishen",
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/agent.ts"
+  },
+  "dependencies": {
+    "@caishen/core": "workspace:*",
+    "@caishen/sdk": "workspace:*",
+    "caishen-lending": "workspace:*",
+    "caishen-swap": "workspace:*",
+    "caishen-wallet": "workspace:*"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0",
+    "typescript": "^5.4.5"
+  }
+}

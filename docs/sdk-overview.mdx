@@ -1,0 +1,30 @@
+---
+title: SDK Overview
+description: The Caishen SDK and core adapter model.
+---
+
+`@caishen/sdk` wraps `@caishen/core` for downstream integrations.
+
+## Primary API
+
+```ts
+import { CaishenWallet } from '@caishen/sdk';
+
+const wallet = CaishenWallet.fromProvisionedConfig();
+await wallet.init();
+
+const bal = await wallet.getBalance('USDT', 'ethereum');
+const tx = await wallet.send('USDT', '0xRecipientAddress', 25, 'ethereum');
+```
+
+## Core internals
+
+- `WdkAdapter`: wallet/protocol registration + account calls
+- `PolicyEngine`: transfer constraints and safety controls
+- `activity-log`: append-only lifecycle and transaction events
+
+See:
+
+- [packages/sdk/src/index.ts](../packages/sdk/src/index.ts)
+- [packages/core/src/wdk-adapter.ts](../packages/core/src/wdk-adapter.ts)
+- [packages/core/src/policy-engine.ts](../packages/core/src/policy-engine.ts)

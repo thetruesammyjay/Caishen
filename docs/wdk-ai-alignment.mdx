@@ -1,0 +1,27 @@
+---
+title: WDK AI Alignment
+description: How Caishen follows Tether WDK AI and agent guidance.
+---
+
+Caishen follows the WDK AI documentation in [TETHER-AI.md](../TETHER-AI.md).
+
+## Implemented alignment
+
+- Official package namespace: `@tetherto/*`
+- WDK docs MCP endpoint configured in [.vscode/mcp.json](../.vscode/mcp.json)
+- Agent instructions in [.github/copilot-instructions.md](../.github/copilot-instructions.md) and [AGENTS.md](../AGENTS.md)
+- Skill guidance enforces explicit confirmation for write actions
+- Policy-gated value movement in [packages/core/src/policy-engine.ts](../packages/core/src/policy-engine.ts)
+- Append-only event logging in [packages/core/src/activity-log.ts](../packages/core/src/activity-log.ts)
+
+## Safety stance
+
+- Never expose mnemonic/private keys in logs or docs
+- Prefer quote/read-only paths before execute/write paths
+- Keep write operations operator-confirmed in user-facing workflows
+
+## References
+
+- WDK docs: https://docs.wallet.tether.io
+- WDK docs MCP server: https://docs.wallet.tether.io/~gitbook/mcp
+- WDK core repo: https://github.com/tetherto/wdk-core

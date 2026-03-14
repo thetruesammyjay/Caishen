@@ -1,0 +1,96 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Caishen",
+  "colors": {
+    "primary": "#00BFA6",
+    "light": "#36D6C2",
+    "dark": "#008A78"
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Guides",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": ["introduction", "quickstart"]
+          },
+          {
+            "group": "Concepts",
+            "pages": ["wdk-ai-alignment", "sdk-overview", "security"]
+          },
+          {
+            "group": "Demo",
+            "pages": ["demo"]
+          }
+        ]
+      },
+      {
+        "tab": "CLI Reference",
+        "groups": [
+          {
+            "group": "Commands",
+            "pages": [
+              "cli/provision",
+              "cli/status",
+              "cli/switch",
+              "cli/logs",
+              "cli/monitor",
+              "cli/verify-wdk",
+              "cli/policy"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Policy Engine",
+        "groups": [
+          {
+            "group": "Policy",
+            "pages": [
+              "policy/overview",
+              "policy/scopes",
+              "policy/sdk-integration",
+              "policy/cli-management"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Skills",
+        "groups": [
+          {
+            "group": "Skills",
+            "pages": [
+              "skills/overview",
+              "skills/caishen-wallet",
+              "skills/caishen-swap",
+              "skills/caishen-lending",
+              "skills/openclaw",
+              "skills/writing-a-skill"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "GitHub",
+        "href": "https://github.com/thetruesammyjay/Caishen"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Get Started",
+      "href": "/quickstart"
+    }
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/thetruesammyjay/Caishen"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+---
+title: Writing a Skill
+description: Add a new Caishen skill package safely.
+---
+
+## Checklist
+
+- Create `packages/skills/<skill-name>/src/index.ts`
+- Create `packages/skills/<skill-name>/SKILL.md`
+- Route execution through `@caishen/sdk` / `@caishen/core`
+- Do not call chain SDKs directly from skills
+- For write paths, require explicit human confirmation
+- Add tests to `packages/skills/test-skills.ts`
+
+## Safety requirements
+
+- No seed/private key exposure
+- Preflight quotes before execution when available
+- Respect policy engine constraints for all value movement

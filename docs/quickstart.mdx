@@ -1,0 +1,51 @@
+---
+title: Quickstart
+description: Build, provision, validate, and monitor Caishen in minutes.
+---
+
+## Prerequisites
+
+- Node.js 20+
+- pnpm 10+
+
+## Install and build
+
+```bash
+pnpm install
+pnpm -r build
+```
+
+## Provision wallet runtime
+
+```bash
+caishen provision --mode wdk-local
+caishen status
+```
+
+This writes runtime artifacts to `~/.caishen/`:
+
+- wallet config
+- policy config
+- append-only activity log
+
+## Validate WDK capabilities
+
+```bash
+caishen verify-wdk --token USDT --amount 1
+caishen verify-wdk --token USDT --amount 1 --json
+```
+
+## Observe in real time
+
+```bash
+caishen logs --tail 50
+caishen monitor --refresh 1000 --tail 16
+```
+
+## Run demo flow
+
+```bash
+pnpm --filter @caishen/demo-agent start
+```
+
+See [demo](./demo) and [walkthrough.md](../walkthrough.md) for the full path.

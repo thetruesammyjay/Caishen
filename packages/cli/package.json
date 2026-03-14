@@ -1,0 +1,24 @@
+{
+  "name": "@caishen/cli",
+  "version": "1.0.0",
+  "description": "CLI application for Caishen (provision, status, switch, logs, policy commands)",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "caishen-cli": "./bin/caishen-cli.js"
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@caishen/core": "workspace:*",
+    "@caishen/monitor": "workspace:*",
+    "commander": "^12.1.0"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.2",
+    "typescript": "^5.4.5"
+  }
+}

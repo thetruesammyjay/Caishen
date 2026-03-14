@@ -1,0 +1,46 @@
+---
+title: Introduction
+description: Agentic multi-chain wallet infrastructure built on Tether WDK.
+---
+
+# What is Caishen?
+
+Caishen is an agentic wallet stack for autonomous operations on top of Tether WDK.
+
+It combines:
+
+- WDK-based multi-chain wallet orchestration
+- policy-gated value movement
+- append-only activity logging
+- CLI, SDK, monitor, and skill layers
+
+<CardGroup cols={2}>
+  <Card title="WDK-native" icon="wallet">
+    Uses `@tetherto/wdk` and official wallet/protocol modules.
+  </Card>
+  <Card title="Policy gated" icon="shield-check">
+    Transfers, swaps, and lending writes are constrained by policy.
+  </Card>
+  <Card title="Auditable" icon="file-lines">
+    Runtime lifecycle and transaction actions are written to append-only logs.
+  </Card>
+  <Card title="Agent ready" icon="robot">
+    Skills and monitor surfaces support autonomous and operator-supervised flows.
+  </Card>
+</CardGroup>
+
+## Architecture
+
+```text
+skills -> @caishen/sdk -> @caishen/core -> @tetherto/wdk modules
+                           |
+                           +-> policy engine
+                           +-> activity log
+                           +-> monitor/cli surfaces
+```
+
+## Links
+
+- Repository: https://github.com/thetruesammyjay/Caishen
+- WDK docs: https://docs.wallet.tether.io
+- WDK AI docs used for alignment: [TETHER-AI.md](../TETHER-AI.md)

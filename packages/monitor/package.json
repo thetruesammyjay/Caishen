@@ -1,0 +1,23 @@
+{
+  "name": "@caishen/monitor",
+  "version": "1.0.0",
+  "description": "Full-terminal Ink/React TUI dashboard for Caishen",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --tsconfig tsconfig.json",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch --tsconfig tsconfig.json",
+    "start": "tsx src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@caishen/core": "workspace:*",
+    "ink": "^5.2.1",
+    "react": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.11",
+    "tsup": "^8.0.2",
+    "typescript": "^5.4.5"
+  }
+}
