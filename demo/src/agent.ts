@@ -4,10 +4,10 @@ import {
   setSessionId,
   getSessionId,
   WdkAdapter
-} from '../../packages/core/src';
-import { runCaishenWalletSkill } from '../../packages/skills/caishen-wallet/src';
-import { runCaishenSwapSkill } from '../../packages/skills/caishen-swap/src';
-import { runCaishenLendingSkill } from '../../packages/skills/caishen-lending/src';
+} from '@caishen/core';
+import { runCaishenWalletSkill } from 'caishen-wallet';
+import { runCaishenSwapSkill } from 'caishen-swap';
+import { runCaishenLendingSkill } from 'caishen-lending';
 import { randomUUID } from 'node:crypto';
 
 async function main() {
