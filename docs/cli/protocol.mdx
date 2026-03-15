@@ -1,0 +1,43 @@
+---
+title: caishen protocol
+description: Invoke WDK protocol methods with dry-run preview and explicit confirmation for execution.
+---
+
+## Examples
+
+```bash
+# dry-run preview only (no protocol execution)
+caishen protocol --chain ethereum --type swap --label velora --method quote --params '{"fromToken":"USDT","toToken":"ETH","amount":"1000000"}' --dry-run
+
+# execute protocol call (requires exact confirmation statement)
+caishen protocol --chain ethereum --type swap --label velora --method quote --params '{"fromToken":"USDT","toToken":"ETH","amount":"1000000"}' --confirm "CONFIRM PROTOCOL swap.velora.quote ON ethereum SIG <FROM_PREFLIGHT>"
+
+# machine-readable output
+caishen protocol --chain ethereum --type lending --label aave --method getMarkets --json --dry-run
+```
+
+## Safety behavior
+
+- Displays preflight invocation context before execution.
+- Requires exact explicit `--confirm` for method execution, including canonical `SIG` derived from chain/type/label/method and normalized params.
+- Supports `--dry-run` for no-write preview path.
+- Emits activity log events for preflight, dry-run, and executed calls.
+
+## Confirmation format reference
+
+- Confirmation template:
+
+```text
+CONFIRM PROTOCOL <type>.<label>.<method> ON <chain> SIG <signature>
+```
+
+- Signature payload:
+
+```text
+protocol|<chain>|<type>|<label>|<method>|<canonicalParams>
+```
+
+- Derivation rules:
+
+- `canonicalParams`: `undefined` when no params are provided; otherwise JSON with recursively sorted object keys.
+- `signature`: `SHA-256(payload)` hex digest, first 16 chars, uppercased.

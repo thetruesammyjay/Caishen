@@ -9,9 +9,10 @@
     "clean": "pnpm -r exec rimraf dist",
     "verify:production-code": "tsx scripts/verify-production-code.ts",
     "caishen": "tsx packages/cli/src/index.ts",
-    "test": "pnpm test:core && pnpm test:cli && pnpm test:sdk && pnpm test:skills",
+    "test": "pnpm test:core && pnpm test:cli && pnpm test:cli:contracts && pnpm test:sdk && pnpm test:skills",
     "test:core": "pnpm --filter @caishen/core test",
-    "test:cli": "tsx packages/cli/src/test-cli.ts",
+    "test:cli": "pnpm --filter @caishen/cli build && tsx packages/cli/src/test-cli.ts",
+    "test:cli:contracts": "pnpm --filter @caishen/cli build && tsx packages/cli/src/test-cli-contract.ts",
     "test:sdk": "tsx packages/sdk/src/test-sdk.ts",
     "test:skills": "tsx packages/skills/test-skills.ts",
     "demo:agent": "pnpm --filter @caishen/demo-agent start"

@@ -30,4 +30,14 @@ Activity logs are append-only JSON lines under `~/.caishen/activity.log` for aud
 - Require human confirmation for all value-moving actions
 - Prefer quote/preflight before execute
 
+CLI enforcement examples:
+
+```bash
+caishen transfer --token USDT --chain ethereum --to 0xRecipientAddress --amount 1 --dry-run
+caishen transfer --token USDT --chain ethereum --to 0xRecipientAddress --amount 1 --confirm "CONFIRM TRANSFER 1 USDT ON ethereum TO 0xrecipientaddress SIG <FROM_PREFLIGHT>"
+
+caishen protocol --chain ethereum --type swap --label velora --method quote --dry-run
+caishen protocol --chain ethereum --type swap --label velora --method quote --confirm "CONFIRM PROTOCOL swap.velora.quote ON ethereum SIG <FROM_PREFLIGHT>"
+```
+
 For detail, see [SECURITY.md](../SECURITY.md) and [POLICY.md](../POLICY.md).

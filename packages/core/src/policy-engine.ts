@@ -114,6 +114,14 @@ export class PolicyEngineWallet implements CaishenWalletProvider {
     return this.baseWallet.getAddress(chain);
   }
 
+  /**
+   * Preflight policy evaluation for a transfer without executing a transaction.
+   * Throws PolicyViolationError when policy denies the requested operation.
+   */
+  evaluateTransfer(tokenSymbol: string, destination: string, amount: number, chain: string): void {
+    this.enforce(tokenSymbol, destination, amount, chain);
+  }
+
   private enforce(tokenSymbol: string, destination: string, amount: number, chain: string) {
     const normalizedChain = chain.trim().toLowerCase();
     const normalizedToken = tokenSymbol.trim().toUpperCase();

@@ -1,5 +1,4 @@
 import { Command } from 'commander';
-import { startMonitor } from '@caishen/monitor';
 
 export const monitorCommand = new Command('monitor')
   .description('Run live activity monitor dashboard')
@@ -8,7 +7,9 @@ export const monitorCommand = new Command('monitor')
   .option('--tail <n>', 'Rows to render', '16')
   .option('--session <id>', 'Filter to one session id')
   .option('--clean', 'Wipe activity log before starting')
-  .action((options: { log?: string; refresh: string; tail: string; session?: string; clean?: boolean }) => {
+  .action(async (options: { log?: string; refresh: string; tail: string; session?: string; clean?: boolean }) => {
+    const moduleName = '@caishen/monitor';
+    const { startMonitor } = await import(moduleName);
     startMonitor({
       activityLogPath: options.log,
       refreshMs: Number(options.refresh),

@@ -38,6 +38,8 @@
               "cli/logs",
               "cli/monitor",
               "cli/verify-wdk",
+              "cli/transfer",
+              "cli/protocol",
               "cli/policy"
             ]
           }

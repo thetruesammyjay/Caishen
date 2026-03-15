@@ -9,6 +9,8 @@ import { logsCommand } from './commands/logs';
 import { switchCommand } from './commands/switch';
 import { monitorCommand } from './commands/monitor';
 import { verifyWdkCommand } from './commands/verify-wdk';
+import { transferCommand } from './commands/transfer';
+import { protocolCommand } from './commands/protocol';
 
 const program = new Command();
 
@@ -23,6 +25,8 @@ program.addCommand(switchCommand);
 program.addCommand(logsCommand);
 program.addCommand(monitorCommand);
 program.addCommand(verifyWdkCommand);
+program.addCommand(transferCommand);
+program.addCommand(protocolCommand);
 program.addCommand(policyCommand);
 
 program.parseAsync(process.argv).catch((error: unknown) => {

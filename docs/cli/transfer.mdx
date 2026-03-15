@@ -1,0 +1,44 @@
+---
+title: caishen transfer
+description: Execute token transfers with quote preflight, policy checks, and explicit confirmation.
+---
+
+## Examples
+
+```bash
+# preflight only: quote + policy pass/fail (no transaction submission)
+caishen transfer --token USDT --chain ethereum --to 0xRecipientAddress --amount 1 --dry-run
+
+# execute write path (requires exact confirmation statement)
+caishen transfer --token USDT --chain ethereum --to 0xRecipientAddress --amount 1 --confirm "CONFIRM TRANSFER 1 USDT ON ethereum TO 0xrecipientaddress SIG <FROM_PREFLIGHT>"
+
+# machine-readable preflight output
+caishen transfer --token USDT --chain ethereum --to 0xRecipientAddress --amount 1 --dry-run --json
+```
+
+## Safety behavior
+
+- Always performs quote preflight before potential execution.
+- Evaluates policy constraints before execution.
+- Requires exact explicit `--confirm` for write execution, including canonical `SIG` derived from normalized payload fields.
+- Emits activity log events for preflight, dry-run, and submission.
+
+## Confirmation format reference
+
+- Confirmation template:
+
+```text
+CONFIRM TRANSFER <normalizedAmount> <TOKEN> ON <chain> TO <normalizedDestination> SIG <signature>
+```
+
+- Signature payload:
+
+```text
+transfer|<TOKEN>|<normalizedAmount>|<chain>|<normalizedDestination>
+```
+
+- Derivation rules:
+
+- `normalizedAmount`: fixed to 12 decimals, then trailing zeros removed (for example, `1.000000000000` -> `1`).
+- `normalizedDestination`: lowercased only when address is hex EVM format (`0x...`), otherwise unchanged.
+- `signature`: `SHA-256(payload)` hex digest, first 16 chars, uppercased.

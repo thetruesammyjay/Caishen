@@ -43,7 +43,17 @@ What this does:
 
 The JSON mode is intended for CI pipelines and emits pass/fail summaries per chain.
 
-## 7) SDK Usage
+## 7) End-to-End Transfer and Protocol Scripts
+- `caishen transfer --token USDT --chain ethereum --to 0xRecipientAddress --amount 1 --dry-run`
+- `caishen transfer --token USDT --chain ethereum --to 0xRecipientAddress --amount 1 --confirm "CONFIRM TRANSFER 1 USDT ON ethereum TO 0xrecipientaddress SIG <FROM_PREFLIGHT>"`
+- `caishen protocol --chain ethereum --type swap --label velora --method quote --params '{"fromToken":"USDT","toToken":"ETH","amount":"1000000"}' --dry-run`
+- `caishen protocol --chain ethereum --type swap --label velora --method quote --params '{"fromToken":"USDT","toToken":"ETH","amount":"1000000"}' --confirm "CONFIRM PROTOCOL swap.velora.quote ON ethereum SIG <FROM_PREFLIGHT>"`
+
+Notes:
+- Copy the exact confirmation string printed by preflight output.
+- Confirmation now includes a canonical payload signature (`SIG`) to reduce operator mismatch risk.
+
+## 8) SDK Usage
 ```ts
 import { CaishenWallet } from '@caishen/sdk';
 
@@ -54,7 +64,7 @@ const usdt = await wallet.getBalance('USDT', 'ethereum');
 console.log(usdt);
 ```
 
-## 8) Skill Usage
+## 9) Skill Usage
 ```ts
 import { runCaishenWalletSkill } from 'caishen-wallet';
 import { runCaishenSwapSkill } from 'caishen-swap';
@@ -79,7 +89,7 @@ const lendingQuote = await runCaishenLendingSkill(adapter, {
 });
 ```
 
-## 9) Demo Agent Workflow
+## 10) Demo Agent Workflow
 - `pnpm --filter @caishen/demo-agent start`
 - `caishen monitor`
 

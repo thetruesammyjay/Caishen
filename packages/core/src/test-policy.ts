@@ -23,6 +23,17 @@ async function run() {
     paused: false
   });
 
+  // Preflight policy check should pass for allowed transfer parameters.
+  wallet.evaluateTransfer('USDT', '0x1', 5, 'ethereum');
+
+  let sawPreflightViolation = false;
+  try {
+    wallet.evaluateTransfer('USDT', '0x1', 11, 'ethereum');
+  } catch (error) {
+    sawPreflightViolation = error instanceof PolicyViolationError;
+  }
+  assert.equal(sawPreflightViolation, true, 'Expected preflight maxAmountPerTx violation');
+
   await wallet.send('USDT', '0x1', 5, 'ethereum');
 
   let sawLimit = false;

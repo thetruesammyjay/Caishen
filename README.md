@@ -77,6 +77,11 @@ caishen logs --level error,warn --type wallet.send,cli.error
 caishen monitor --refresh 1000 --tail 12
 caishen verify-wdk --token USDT --amount 1
 caishen verify-wdk --token USDT --amount 1 --json
+# dry-run preflight (quote + policy pass/fail, no onchain write)
+caishen transfer --token USDT --chain ethereum --to 0xRecipientAddress --amount 1 --dry-run
+caishen transfer --token USDT --chain ethereum --to 0xRecipientAddress --amount 1 --confirm "CONFIRM TRANSFER 1 USDT ON ethereum TO 0xrecipientaddress SIG <FROM_PREFLIGHT>"
+caishen protocol --chain ethereum --type swap --label velora --method quote --params '{"fromToken":"USDT","toToken":"ETH","amount":"1000000"}' --dry-run
+caishen protocol --chain ethereum --type swap --label velora --method quote --params '{"fromToken":"USDT","toToken":"ETH","amount":"1000000"}' --confirm "CONFIRM PROTOCOL swap.velora.quote ON ethereum SIG <FROM_PREFLIGHT>"
 
 caishen policy status
 caishen policy set MAX_USDT_PER_TX 100
