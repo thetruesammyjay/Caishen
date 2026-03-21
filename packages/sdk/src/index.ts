@@ -2,6 +2,7 @@ import {
   CaishenWalletProvider,
   PolicyEngineWallet,
   PolicyLimits,
+  TransferQuoteResult,
   WdkAdapter,
   WdkAdapterConfig,
   loadWalletConfig
@@ -56,12 +57,20 @@ export class CaishenWallet implements CaishenWalletProvider {
     return this.effectiveWallet.getBalance(tokenSymbol, chain);
   }
 
+  async getTokenBalances(chain: string, tokenSymbols: string[]): Promise<Record<string, number>> {
+    return this.effectiveWallet.getTokenBalances(chain, tokenSymbols);
+  }
+
   async send(tokenSymbol: string, destination: string, amount: number, chain: string): Promise<string> {
     return this.effectiveWallet.send(tokenSymbol, destination, amount, chain);
   }
 
   async getAddress(chain: string): Promise<string> {
     return this.effectiveWallet.getAddress(chain);
+  }
+
+  async quoteTransfer(tokenSymbol: string, destination: string, amount: number, chain: string): Promise<TransferQuoteResult> {
+    return this.effectiveWallet.quoteTransfer(tokenSymbol, destination, amount, chain);
   }
 
   withPolicy(policy: PolicyLimits): CaishenWalletProvider {

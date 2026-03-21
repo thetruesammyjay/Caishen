@@ -6,6 +6,43 @@
 
 ---
 
+## Caishen — How This Project Uses WDK
+
+Caishen is a monorepo built **on top of** WDK. AI coding agents working in this repo should understand the following before using WDK APIs directly:
+
+| Layer | Package | What It Does |
+|---|---|---|
+| WDK Core | `@tetherto/wdk` | Seed phrase management, wallet registration, account retrieval |
+| WDK Adapter | `@caishen/core` → `wdk-adapter.ts` | Wraps WDK — lazy chain registration, fee safety caps, token registry |
+| Policy Engine | `@caishen/core` → `policy-engine.ts` | Enforces spend/rate/chain limits on every `send()` call |
+| SDK | `@caishen/sdk` | `CaishenWallet` — the public surface for operators and agents |
+| CLI | `@caishen/cli` | Operator tooling: provision, status, transfer, policy, logs, monitor |
+
+**Key rules for agents:**
+- **Never call WDK APIs directly** from outside `@caishen/core`. Use `CaishenWallet` or `WdkAdapter`.
+- **Never call `send()` without calling `quoteTransfer()` first** in operator-facing flows.
+- **Never bypass `PolicyEngineWallet`** — all agent-initiated transfers must flow through it.
+- **Bitcoin uses Electrum config** (`host`, `port`, `protocol`, `network`) — not an HTTP `provider`.
+- **Solana uses `rpcUrl`** — `wsUrl` is not a documented config key.
+- **ERC-4337** is supported via chain key `ethereum-erc4337` with `@tetherto/wdk-wallet-evm-erc-4337`. Caller must provide `bundlerUrl` and `paymasterUrl`.
+
+**Installed WDK packages (see `packages/core/package.json`):**
+- `@tetherto/wdk` core
+- `@tetherto/wdk-wallet-evm` — Ethereum / Polygon / Arbitrum
+- `@tetherto/wdk-wallet-evm-erc-4337` — ERC-4337 account abstraction
+- `@tetherto/wdk-wallet-btc` — Bitcoin (Electrum)
+- `@tetherto/wdk-wallet-tron` — TRON
+- `@tetherto/wdk-wallet-ton` — TON
+- `@tetherto/wdk-wallet-solana` — Solana
+- `@tetherto/wdk-protocol-swap-velora-evm` — DEX swap
+- `@tetherto/wdk-protocol-bridge-usdt0-evm` — USDT0 bridge
+- `@tetherto/wdk-protocol-lending-aave-evm` — Aave lending
+
+**MCP for in-editor WDK docs:**  
+`.vscode/mcp.json` connects to `https://docs.wallet.tether.io/~gitbook/mcp` — the live WDK docs MCP server.
+
+---
+
 ## Table of Contents
 
 1. [Build with AI](#1-build-with-ai)

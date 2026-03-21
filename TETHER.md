@@ -268,9 +268,10 @@ const wdkWithWallets = new WDK(seedPhrase)
     provider: 'https://api.trongrid.io'
   })
   .registerWallet('bitcoin', WalletManagerBtc, {
-    network: 'mainnet',
-    host: 'electrum.blockstream.info',
-    port: 50001
+    network: 'bitcoin',
+    host: 'fulcrum.frznode.com',
+    port: 50001,
+    protocol: 'tcp'
   })
 
 console.log('Wallets registered for Ethereum, TRON, and Bitcoin')
@@ -329,9 +330,10 @@ async function main() {
         provider: 'https://api.trongrid.io'
       })
       .registerWallet('bitcoin', WalletManagerBtc, {
-        network: 'mainnet',
-        host: 'electrum.blockstream.info',
-        port: 50001
+        network: 'bitcoin',
+        host: 'fulcrum.frznode.com',
+        port: 50001,
+        protocol: 'tcp'
       })
 
     console.log('Wallets registered for Ethereum, TRON, and Bitcoin')
@@ -432,8 +434,7 @@ import WalletManagerSolana from '@tetherto/wdk-wallet-solana'
 const wdk = new WDK(seedPhrase)
 
 wdk.registerWallet('solana', WalletManagerSolana, {
-  rpcUrl: 'https://api.mainnet-beta.solana.com',
-  wsUrl: 'wss://api.mainnet-beta.solana.com'
+  rpcUrl: 'https://api.mainnet-beta.solana.com'  // wsUrl is not a valid config key
 })
 ```
 

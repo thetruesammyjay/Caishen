@@ -12,10 +12,14 @@ export interface CaishenLendingInput {
   method?: string;
 }
 
-function defaultLendingMethod(action: CaishenLendingInput['action']): string {
+function defaultLendingMethod(action: CaishenLendingInput['action'], params: Record<string, unknown>): string {
   switch (action) {
     case 'quote':
-      return 'quote';
+      if (params.action === 'supply') return 'quoteSupply';
+      if (params.action === 'borrow') return 'quoteBorrow';
+      if (params.action === 'repay') return 'quoteRepay';
+      if (params.action === 'withdraw') return 'quoteWithdraw';
+      return 'quoteSupply';
     case 'supply':
       return 'supply';
     case 'borrow':
@@ -34,7 +38,7 @@ export async function runCaishenLendingSkill(
   input: CaishenLendingInput
 ): Promise<unknown> {
   const label = input.label ?? 'aave';
-  const method = input.method ?? defaultLendingMethod(input.action);
+  const method = input.method ?? defaultLendingMethod(input.action, input.params);
 
   return adapter.invokeProtocol({
     chain: input.chain,

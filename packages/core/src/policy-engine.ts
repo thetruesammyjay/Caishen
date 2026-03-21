@@ -1,4 +1,4 @@
-import { CaishenWalletProvider } from './interfaces';
+import { CaishenWalletProvider, TransferQuoteResult } from './interfaces';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { getCaishenPaths } from './config-store';
@@ -101,6 +101,19 @@ export class PolicyEngineWallet implements CaishenWalletProvider {
 
   async getBalance(tokenSymbol: string, chain: string): Promise<number> {
     return this.baseWallet.getBalance(tokenSymbol, chain);
+  }
+
+  async getTokenBalances(chain: string, tokenSymbols: string[]): Promise<Record<string, number>> {
+    return this.baseWallet.getTokenBalances(chain, tokenSymbols);
+  }
+
+  async quoteTransfer(
+    tokenSymbol: string,
+    destination: string,
+    amount: number,
+    chain: string
+  ): Promise<TransferQuoteResult> {
+    return this.baseWallet.quoteTransfer(tokenSymbol, destination, amount, chain);
   }
 
   async send(tokenSymbol: string, destination: string, amount: number, chain: string): Promise<string> {
@@ -277,8 +290,15 @@ export class PolicyEngineWallet implements CaishenWalletProvider {
     }
 
     if (this.policy.activeDays && this.policy.activeDays.length > 0) {
+      const timezone = this.policy.activeHours?.timezone ?? 'UTC';
       const dayNames = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
-      const today = dayNames[now.getUTCDay()];
+      let today: string;
+      try {
+        const formatter = new Intl.DateTimeFormat('en-US', { weekday: 'short', timeZone: timezone });
+        today = formatter.format(now).toLowerCase().slice(0, 3);
+      } catch {
+        today = dayNames[now.getUTCDay()];
+      }
       const allowed = this.policy.activeDays.map((d) => d.toLowerCase());
       if (!allowed.includes(today)) {
         throw new PolicyViolationError(

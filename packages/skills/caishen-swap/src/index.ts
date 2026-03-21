@@ -17,7 +17,7 @@ export async function runCaishenSwapSkill(
   input: CaishenSwapInput
 ): Promise<unknown> {
   const label = input.label ?? 'velora';
-  const method = input.method ?? (input.action === 'quote' ? 'quote' : 'swap');
+  const method = input.method ?? (input.action === 'quote' ? 'quoteSwap' : 'swap');
 
   return adapter.invokeProtocol({
     chain: input.chain,

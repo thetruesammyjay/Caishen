@@ -1,6 +1,6 @@
 import WdkManager from '@tetherto/wdk';
 import type { IWalletAccountWithProtocols } from '@tetherto/wdk';
-import { CaishenWalletProvider } from './interfaces';
+import { CaishenWalletProvider, TransferQuoteResult } from './interfaces';
 import { appendActivity } from './activity-log';
 import { decryptSecret } from './crypto';
 
@@ -47,14 +47,6 @@ export interface WdkAdapterConfig {
   protocols?: Record<string, ProtocolModuleConfig[]>;
 }
 
-export interface TransferQuoteResult {
-  chain: string;
-  tokenSymbol: string;
-  amount: number;
-  fee: number;
-  feeBaseUnits: string;
-}
-
 export interface ProtocolInvokeInput {
   chain: string;
   type: ProtocolType;
@@ -86,21 +78,47 @@ export class WdkAdapter implements CaishenWalletProvider {
     ethereum: '@tetherto/wdk-wallet-evm',
     polygon: '@tetherto/wdk-wallet-evm',
     arbitrum: '@tetherto/wdk-wallet-evm',
+    'ethereum-erc4337': '@tetherto/wdk-wallet-evm-erc-4337',
     tron: '@tetherto/wdk-wallet-tron',
     ton: '@tetherto/wdk-wallet-ton',
-    solana: '@tetherto/wdk-wallet-solana'
+    solana: '@tetherto/wdk-wallet-solana',
+    bitcoin: '@tetherto/wdk-wallet-btc',
+    testnet: '@tetherto/wdk-wallet-btc',  // BTC testnet
+    regtest: '@tetherto/wdk-wallet-btc'  // BTC regtest
   };
 
   private static readonly DEFAULT_WALLET_CONFIG_BY_CHAIN: Record<string, Record<string, unknown>> = {
-    ethereum: { provider: 'https://eth.drpc.org' },
-    polygon: { provider: 'https://polygon.drpc.org' },
-    arbitrum: { provider: 'https://arbitrum.drpc.org' },
-    tron: { provider: 'https://api.trongrid.io' },
+    // EVM chains — transferMaxFee in wei (0.005 ETH)
+    ethereum: { provider: 'https://eth.drpc.org', transferMaxFee: 5000000000000000n },
+    polygon: { provider: 'https://polygon.drpc.org', transferMaxFee: 5000000000000000n },
+    arbitrum: { provider: 'https://arbitrum.drpc.org', transferMaxFee: 5000000000000000n },
+    // ERC-4337 — bundler/paymaster must be provided by caller via config.wallets['ethereum-erc4337']
+    'ethereum-erc4337': { provider: 'https://eth.drpc.org', transferMaxFee: 5000000000000000n },
+    // TRON — transferMaxFee in Sun (10 TRX)
+    tron: { provider: 'https://api.trongrid.io', transferMaxFee: 10000000 },
+    // TON
     ton: { provider: 'https://toncenter.com/api/v2/jsonRPC' },
-    solana: {
-      rpcUrl: 'https://api.mainnet-beta.solana.com',
-      wsUrl: 'wss://api.mainnet-beta.solana.com'
-    }
+    // Solana — only rpcUrl is documented; transferMaxFee in lamports (0.005 SOL)
+    solana: { rpcUrl: 'https://api.mainnet-beta.solana.com', transferMaxFee: 5000000 },
+    // Bitcoin — Electrum config; defaults to public Blockstream server (swap for production)
+    bitcoin: { host: 'fulcrum.frznode.com', port: 50001, protocol: 'tcp', network: 'bitcoin' },
+    testnet: { host: 'fulcrum.frznode.com', port: 50001, protocol: 'tcp', network: 'testnet' },
+    regtest: { host: '127.0.0.1', port: 50001, protocol: 'tcp', network: 'regtest' }
+  };
+
+  /**
+   * Testnet endpoint overrides applied when CAISHEN_NETWORK=testnet.
+   * EVM → Sepolia, Polygon → Amoy, TRON → Nile, Solana → Devnet, BTC → testnet Electrum.
+   */
+  private static readonly TESTNET_WALLET_CONFIG_BY_CHAIN: Partial<Record<string, Record<string, unknown>>> = {
+    ethereum: { provider: 'https://ethereum-sepolia.drpc.org', transferMaxFee: 5000000000000000n },
+    polygon: { provider: 'https://polygon-amoy.drpc.org', transferMaxFee: 5000000000000000n },
+    arbitrum: { provider: 'https://arbitrum-sepolia.drpc.org', transferMaxFee: 5000000000000000n },
+    'ethereum-erc4337': { provider: 'https://ethereum-sepolia.drpc.org', transferMaxFee: 5000000000000000n },
+    tron: { provider: 'https://nile.trongrid.io', transferMaxFee: 10000000 },
+    ton: { provider: 'https://testnet.toncenter.com/api/v2/jsonRPC' },
+    solana: { rpcUrl: 'https://api.devnet.solana.com', transferMaxFee: 5000000 },
+    bitcoin: { host: 'fulcrum.frznode.com', port: 50001, protocol: 'tcp', network: 'testnet' },
   };
 
   private static readonly DEFAULT_PROTOCOL_MODULES: Partial<Record<ProtocolType, string>> = {
@@ -131,18 +149,26 @@ export class WdkAdapter implements CaishenWalletProvider {
     ethereum: 'ETH',
     polygon: 'MATIC',
     arbitrum: 'ETH',
+    'ethereum-erc4337': 'ETH',
     tron: 'TRX',
     ton: 'TON',
-    solana: 'SOL'
+    solana: 'SOL',
+    bitcoin: 'BTC',
+    testnet: 'BTC',
+    regtest: 'BTC'
   };
 
   private static readonly DEFAULT_NATIVE_DECIMALS: Record<string, number> = {
     ethereum: 18,
     polygon: 18,
     arbitrum: 18,
+    'ethereum-erc4337': 18,
     tron: 6,
     ton: 9,
-    solana: 9
+    solana: 9,
+    bitcoin: 8,
+    testnet: 8,
+    regtest: 8
   };
 
   private static readonly DEFAULT_TOKEN_REGISTRY: Record<string, Record<string, TokenConfig>> = {
@@ -219,6 +245,33 @@ export class WdkAdapter implements CaishenWalletProvider {
     });
 
     return humanBalance;
+  }
+
+  async getTokenBalances(chain: string, tokenSymbols: string[]): Promise<Record<string, number>> {
+    this.ensureInitialized();
+    const normalizedChain = this.normalizeChain(chain);
+
+    const results = await Promise.all(
+      tokenSymbols.map(async (symbol) => {
+        try {
+          const balance = await this.getBalance(symbol, normalizedChain);
+          return [symbol.toUpperCase(), balance] as [string, number];
+        } catch {
+          return [symbol.toUpperCase(), 0] as [string, number];
+        }
+      })
+    );
+
+    const balances = Object.fromEntries(results);
+
+    appendActivity({
+      level: 'info',
+      type: 'wallet.balances',
+      message: `Batch balances requested on ${normalizedChain}`,
+      data: { chain: normalizedChain, tokens: tokenSymbols, balances }
+    });
+
+    return balances;
   }
 
   async send(tokenSymbol: string, destination: string, amount: number, chain: string): Promise<string> {
@@ -400,11 +453,20 @@ export class WdkAdapter implements CaishenWalletProvider {
 
     let imported: unknown;
     try {
-      imported = await import(moduleName);
+      if (typeof require !== 'undefined') {
+        // Prefer require in CJS environments to prevent dual-package instanceof hazards
+        imported = require(moduleName);
+      } else {
+        imported = await import(moduleName);
+      }
     } catch {
-      throw new Error(
-        `Wallet module '${moduleName}' is not installed. Install it and retry.`
-      );
+      try {
+        imported = await import(moduleName);
+      } catch {
+        throw new Error(
+          `Wallet module '${moduleName}' is not installed. Install it and retry.`
+        );
+      }
     }
 
     const WalletManager = this.resolveDefaultExport(imported);
@@ -412,11 +474,52 @@ export class WdkAdapter implements CaishenWalletProvider {
       throw new Error(`Wallet module '${moduleName}' does not export a valid wallet manager class.`);
     }
 
-    const defaultConfig = WdkAdapter.DEFAULT_WALLET_CONFIG_BY_CHAIN[chain] ?? {};
+    const defaultConfig = this.resolveDefaultWalletConfig(chain);
     const mergedConfig = { ...defaultConfig, ...(walletConfig?.config ?? {}) };
 
     this.wdk!.registerWallet(chain, WalletManager as never, mergedConfig as never);
     this.registeredChains.add(chain);
+  }
+
+  /**
+   * Resolves the default wallet config for a chain by layering:
+   * 1. Mainnet static defaults (DEFAULT_WALLET_CONFIG_BY_CHAIN)
+   * 2. Testnet overrides when CAISHEN_NETWORK=testnet (TESTNET_WALLET_CONFIG_BY_CHAIN)
+   * 3. Per-chain RPC env overrides: CAISHEN_RPC_<CHAIN> for provider/rpcUrl keys
+   *
+   * Caller-supplied config.wallets[chain].config is applied on top by the caller.
+   */
+  private resolveDefaultWalletConfig(chain: string): Record<string, unknown> {
+    const network = (process.env['CAISHEN_NETWORK'] ?? 'mainnet').toLowerCase();
+    const isTestnet = network === 'testnet';
+
+    const base = WdkAdapter.DEFAULT_WALLET_CONFIG_BY_CHAIN[chain] ?? {};
+    const testnetOverride = isTestnet
+      ? (WdkAdapter.TESTNET_WALLET_CONFIG_BY_CHAIN[chain] ?? {})
+      : {};
+
+    const merged: Record<string, unknown> = { ...base, ...testnetOverride };
+
+    // Per-chain RPC env override: CAISHEN_RPC_ETHEREUM, CAISHEN_RPC_POLYGON, etc.
+    const envKey = `CAISHEN_RPC_${chain.toUpperCase().replace(/-/g, '_')}`;
+    const envRpc = process.env[envKey];
+    if (envRpc) {
+      // EVM/TRON/TON use 'provider'; Solana uses 'rpcUrl'; BTC uses Electrum host — skip BTC.
+      const isBtcChain = chain === 'bitcoin' || chain === 'testnet' || chain === 'regtest';
+      if (!isBtcChain) {
+        if ('rpcUrl' in merged) {
+          merged['rpcUrl'] = envRpc;
+        } else {
+          merged['provider'] = envRpc;
+        }
+      }
+    }
+
+    if (isTestnet) {
+      console.log(`[WdkAdapter] CAISHEN_NETWORK=testnet — using testnet config for '${chain}'`);
+    }
+
+    return merged;
   }
 
   private async ensureProtocolsRegistered(chain: string): Promise<void> {
@@ -434,9 +537,18 @@ export class WdkAdapter implements CaishenWalletProvider {
 
       let imported: unknown;
       try {
-        imported = await import(moduleName);
+        if (typeof require !== 'undefined') {
+          // Prefer require in CJS environments to prevent dual-package instanceof hazards
+          imported = require(moduleName);
+        } else {
+          imported = await import(moduleName);
+        }
       } catch {
-        throw new Error(`Protocol module '${moduleName}' is not installed. Install it and retry.`);
+        try {
+          imported = await import(moduleName);
+        } catch {
+          throw new Error(`Protocol module '${moduleName}' is not installed. Install it and retry.`);
+        }
       }
 
       const Protocol = this.resolveDefaultExport(imported);

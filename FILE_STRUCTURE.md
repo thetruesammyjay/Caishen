@@ -1,6 +1,6 @@
 # Caishen Monorepo Architecture
 
-Caishen is built as an extensible, multi-package monorepo using `pnpm` workspaces. This modular design mirrors the successful architecture of Glosso, while introducing specific layers for the **Tether Wallet Development Kit (WDK)**.
+Caishen is built as an extensible, multi-package monorepo using `pnpm` workspaces introducing specific layers for the **Tether Wallet Development Kit (WDK)**.
 
 ## Project Structure Overview
 

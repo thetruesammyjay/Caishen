@@ -3,9 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "description": "Reference autonomous agent workflow for Caishen",
-  "type": "module",
   "scripts": {
-    "start": "tsx src/agent.ts"
+    "start": "tsx ../packages/cli/src/index.ts provision --mode wdk-local && tsx src/agent.ts"
   },
   "dependencies": {
     "@caishen/core": "workspace:*",
