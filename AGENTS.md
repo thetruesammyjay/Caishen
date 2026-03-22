@@ -27,3 +27,10 @@ Caishen is an agentic wallet monorepo built on Tether WDK (`@tetherto/wdk`).
 - If monitor/cli changed, also run:
   - `pnpm --filter @caishen/monitor build`
   - `pnpm --filter @caishen/cli build`
+
+## AI Agent Integration
+To run the interactive LangChain CLI agent with your Groq or OpenAI key:
+- `pnpm --filter @caishen/demo-agent start:ai`
+
+To run the static headless verification agent:
+- `pnpm --filter @caishen/demo-agent start`

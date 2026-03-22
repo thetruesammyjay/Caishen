@@ -198,6 +198,28 @@ caishen monitor                # live dashboard
 
 ---
 
+### Getting Started
+
+```bash
+# 1. Clone & Set up
+git clone https://github.com/thetruesammyjay/Caishen
+cd Caishen
+bash install.sh --dev
+
+# 2. Provision your local agent wallet
+pnpm caishen provision --mode wdk-local
+
+# 3. Start the Interactive LangChain AI Chatbot (Groq/OpenAI)
+pnpm --filter @caishen/demo-agent start:ai
+
+# Or run the headless automated test suite
+pnpm --filter @caishen/demo-agent start
+```
+
+The demo agent runs wallet + protocol quote paths and writes lifecycle events to `~/.caishen/activity.log`.
+
+---
+
 ## Skills
 
 - `caishen-wallet` — balances, addresses, transfers

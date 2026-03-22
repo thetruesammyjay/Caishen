@@ -13,6 +13,12 @@ class StubWallet implements CaishenWalletProvider {
   async getAddress(): Promise<string> {
     return '0xabc';
   }
+  async getTokenBalances(): Promise<Record<string, number>> {
+    return {};
+  }
+  async quoteTransfer(tokenSymbol: string, destination: string, amount: number, chain: string): Promise<any> {
+    return { chain, tokenSymbol, amount, fee: '10', feeBaseUnits: '10' };
+  }
 }
 
 async function run() {
