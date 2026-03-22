@@ -124,39 +124,27 @@ const wallet = new CaishenWallet({
 
 ```bash
 # Wallet
-caishen provision --mode wdk-local
-caishen status
-caishen verify-wdk --token USDT --amount 1
-caishen verify-wdk --token USDT --amount 1 --json
-
-# Transfers (dry-run first, then confirm)
-caishen transfer --token USDT --chain ethereum --to 0xAddr --amount 1 --dry-run
-caishen transfer --token USDT --chain ethereum --to 0xAddr --amount 1 \
-  --confirm "CONFIRM TRANSFER 1 USDT ON ethereum TO 0xaddr SIG <FROM_PREFLIGHT>"
-
-# Protocols
-caishen protocol --chain ethereum --type swap --label velora --method quote \
-  --params '{"fromToken":"USDT","toToken":"ETH","amount":"1000000"}' --dry-run
-caishen protocol --chain ethereum --type swap --label velora --method quote \
-  --params '{"fromToken":"USDT","toToken":"ETH","amount":"1000000"}' \
-  --confirm "CONFIRM PROTOCOL swap.velora.quote ON ethereum SIG <FROM_PREFLIGHT>"
+pnpm caishen provision --mode wdk-local
+pnpm caishen status
+pnpm caishen verify-wdk --token USDT --amount 1
+pnpm caishen verify-wdk --token USDT --amount 1 --json
 
 # Logs & Monitor
-caishen logs --tail 50
-caishen logs --follow
-caishen logs --level error,warn --type wallet.send,cli.error
-caishen monitor --refresh 1000 --tail 12
+pnpm caishen logs --tail 50
+pnpm caishen logs --follow
+pnpm caishen logs --level error,warn --type wallet.send,cli.error
+pnpm caishen monitor --refresh 1000 --tail 12
 
 # Policy
-caishen policy status
-caishen policy set MAX_USDT_PER_TX 100
-caishen policy set MAX_TX_PER_HOUR 10
-caishen policy set ALLOWED_CHAINS ethereum,tron,polygon
-caishen policy pause
-caishen policy resume
+pnpm caishen policy status
+pnpm caishen policy set MAX_USDT_PER_TX 100
+pnpm caishen policy set MAX_TX_PER_HOUR 10
+pnpm caishen policy set ALLOWED_CHAINS ethereum,tron,polygon
+pnpm caishen policy pause
+pnpm caishen policy resume
 
 # Mode
-caishen switch --mode <mode>
+pnpm caishen switch --mode <mode>
 ```
 
 ---
@@ -234,7 +222,39 @@ The demo agent runs wallet + protocol quote paths and writes lifecycle events to
 pnpm --filter @caishen/demo-agent start
 ```
 
-The demo agent runs wallet + protocol quote paths and writes lifecycle events to `~/.caishen/activity.log`.
+The demo agent runs wallet checks and the supported protocol quote paths for the current network, then writes lifecycle events to `~/.caishen/activity.log`.
+
+---
+
+## Architecture
+
+```mermaid
+flowchart TD
+  User[Operator / AI Agent] --> Demo[demo/]
+  User --> CLI[packages/cli/]
+  User --> SDK[packages/sdk/]
+
+  Demo --> Core[packages/core/]
+  CLI --> Core
+  SDK --> Core
+
+  Demo --> Skills[packages/skills/]
+  Skills --> Core
+
+  Core --> WDK[@tetherto/wdk]
+  Core --> Wallets[Chain wallet modules]
+  Core --> Protocols[Swap / lending protocol modules]
+
+  Core --> WalletFile[(~/.caishen/wallet.json)]
+  Core --> PolicyFile[(~/.caishen/policy.json)]
+  Core --> ActivityLog[(~/.caishen/activity.log)]
+
+  CLI --> Manifest[CAISHEN.md capability manifest]
+  Demo --> Manifest
+
+  Wallets --> Network[RPC / chain endpoints]
+  Protocols --> Network
+```
 
 ---
 
