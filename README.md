@@ -241,7 +241,7 @@ flowchart TD
   Demo --> Skills[packages/skills/]
   Skills --> Core
 
-  Core --> WDK[@tetherto/wdk]
+  Core --> WDK["@tetherto/wdk"]
   Core --> Wallets[Chain wallet modules]
   Core --> Protocols[Swap / lending protocol modules]
 
