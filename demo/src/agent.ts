@@ -5,9 +5,9 @@ import {
   getSessionId,
   WdkAdapter
 } from '@caishen/core';
-import { runCaishenWalletSkill } from 'caishen-wallet';
-import { runCaishenSwapSkill } from 'caishen-swap';
-import { runCaishenLendingSkill } from 'caishen-lending';
+import { runCaishenWalletSkill } from '../../packages/skills/caishen-wallet/src/index.ts';
+import { runCaishenSwapSkill } from '../../packages/skills/caishen-swap/src/index.ts';
+import { runCaishenLendingSkill } from '../../packages/skills/caishen-lending/src/index.ts';
 import { randomUUID } from 'node:crypto';
 
 async function main() {
@@ -15,6 +15,9 @@ async function main() {
   if (!config) {
     throw new Error('Wallet is not provisioned. Run `caishen provision --mode wdk-local` first.');
   }
+
+  const network = (process.env.CAISHEN_NETWORK ?? 'mainnet').toLowerCase();
+  const shouldSkipSwapQuote = network === 'testnet';
 
   setSessionId(randomUUID().replace(/-/g, '').slice(0, 8));
 
@@ -55,32 +58,37 @@ async function main() {
     tokenSymbol: 'USDT',
     chain: targetChain
   });
+  const usdtBalanceValue = typeof usdtBalance === 'number' ? usdtBalance : Number(usdtBalance);
 
   appendActivity({
     level: 'info',
     type: 'agent.thinking',
     message: 'Evaluating swap and lending quote paths',
-    data: { chain: targetChain, usdtBalance }
+    data: { chain: targetChain, usdtBalance, network }
   });
 
-  const dryRunSwap = await runCaishenSwapSkill(adapter, {
-    chain: targetChain,
-    action: 'quote',
-    params: {
-      fromToken: 'USDT',
-      toToken: 'USDC',
-      amount: '1000000'
-    }
-  }).catch((error: unknown) => ({ error: error instanceof Error ? error.message : String(error) }));
+  const dryRunSwap = shouldSkipSwapQuote
+    ? { skipped: true, reason: `Swap quotes are not supported on ${network}; run on a supported mainnet chain.` }
+    : await runCaishenSwapSkill(adapter, {
+        chain: targetChain,
+        action: 'quote',
+        params: {
+          fromToken: 'USDT',
+          toToken: 'ETH',
+          amount: '1000000'
+        }
+      }).catch((error: unknown) => ({ error: error instanceof Error ? error.message : String(error) }));
 
-  const dryRunLending = await runCaishenLendingSkill(adapter, {
-    chain: targetChain,
-    action: 'quote',
-    params: {
-      asset: 'USDT',
-      amount: '1000000'
-    }
-  }).catch((error: unknown) => ({ error: error instanceof Error ? error.message : String(error) }));
+  const dryRunLending = usdtBalanceValue > 0
+    ? await runCaishenLendingSkill(adapter, {
+        chain: targetChain,
+        action: 'quote',
+        params: {
+          asset: 'USDT',
+          amount: '1000000'
+        }
+      }).catch((error: unknown) => ({ error: error instanceof Error ? error.message : String(error) }))
+    : { skipped: true, reason: 'No USDT balance available to quote a supply operation.' };
 
   appendActivity({
     level: 'info',

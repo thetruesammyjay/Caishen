@@ -173,13 +173,16 @@ export class WdkAdapter implements CaishenWalletProvider {
 
   private static readonly DEFAULT_TOKEN_REGISTRY: Record<string, Record<string, TokenConfig>> = {
     ethereum: {
-      USDT: { address: '0xdAC17F958D2ee523a2206206994597C13D831ec7', decimals: 6 }
+      USDT: { address: '0xdAC17F958D2ee523a2206206994597C13D831ec7', decimals: 6 },
+      USDC: { address: '0xA0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', decimals: 6 }
     },
     polygon: {
-      USDT: { address: '0xc2132D05D31c914a87C6611C10748AaCbA6BdeC5', decimals: 6 }
+      USDT: { address: '0xc2132D05D31c914a87C6611C10748AaCbA6BdeC5', decimals: 6 },
+      USDC: { address: '0x3c499c542cef5e3811e1192ce70d8cc03d5c3359', decimals: 6 }
     },
     arbitrum: {
-      USDT: { address: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9', decimals: 6 }
+      USDT: { address: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9', decimals: 6 },
+      USDC: { address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831', decimals: 6 }
     },
     tron: {
       USDT: { address: 'TXLAQ63Xg1NAzckPwKHvzw7CSEmLMEqcdj', decimals: 6 }
@@ -348,8 +351,8 @@ export class WdkAdapter implements CaishenWalletProvider {
     }
 
     const result = input.params === undefined
-      ? await (method as () => Promise<unknown>)()
-      : await (method as (params: unknown) => Promise<unknown>)(input.params);
+      ? await (method as () => Promise<unknown>).call(protocol)
+      : await (method as (params: unknown) => Promise<unknown>).call(protocol, input.params);
 
     appendActivity({
       level: 'info',
@@ -359,6 +362,12 @@ export class WdkAdapter implements CaishenWalletProvider {
     });
 
     return result;
+  }
+
+  resolveTokenAddress(chain: string, tokenSymbol: string): string {
+    const normalizedChain = this.normalizeChain(chain);
+    const normalizedToken = tokenSymbol.trim().toUpperCase();
+    return this.getTokenConfig(normalizedChain, normalizedToken).address;
   }
 
   private getProtocolInstance(

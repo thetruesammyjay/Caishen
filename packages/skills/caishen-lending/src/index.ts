@@ -39,12 +39,41 @@ export async function runCaishenLendingSkill(
 ): Promise<unknown> {
   const label = input.label ?? 'aave';
   const method = input.method ?? defaultLendingMethod(input.action, input.params);
+  const params = normalizeLendingParams(adapter, input.chain, input.params);
 
   return adapter.invokeProtocol({
     chain: input.chain,
     type: 'lending',
     label,
     method,
-    params: input.params
+    params
   });
+}
+
+function normalizeLendingParams(adapter: WdkAdapter, chain: string, params: Record<string, unknown>): Record<string, unknown> {
+  const resolved: Record<string, unknown> = { ...params };
+  const resolveToken = (value: unknown): unknown => {
+    if (typeof value !== 'string') return value;
+    if (/^0x[a-fA-F0-9]{40}$/.test(value)) return value;
+    if (typeof (adapter as unknown as { resolveTokenAddress?: (chain: string, tokenSymbol: string) => string }).resolveTokenAddress === 'function') {
+      try {
+        return (adapter as unknown as { resolveTokenAddress: (chain: string, tokenSymbol: string) => string }).resolveTokenAddress(chain, value);
+      } catch {
+        return value;
+      }
+    }
+    return value;
+  };
+
+  if (resolved.token === undefined && resolved.asset !== undefined) {
+    resolved.token = resolveToken(resolved.asset);
+  }
+
+  if (resolved.amount !== undefined && typeof resolved.amount === 'string' && /^\d+$/.test(resolved.amount)) {
+    resolved.amount = BigInt(resolved.amount);
+  }
+
+  delete resolved.asset;
+
+  return resolved;
 }

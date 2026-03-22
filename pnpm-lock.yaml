@@ -43,7 +43,19 @@ importers:
         version: 1.1.5(@langchain/core@1.1.35(ws@8.19.0))
       '@langchain/langgraph':
         specifier: ^1.2.5
-        version: 1.2.5(@langchain/core@1.1.35(ws@8.19.0))(react@18.3.1)(zod@4.3.6)
+        version: 1.2.5(@langchain/core@1.1.35(ws@8.19.0))(react@18.3.1)(zod@3.25.76)
+      '@tetherto/wdk-protocol-lending-aave-evm':
+        specifier: 1.0.0-beta.3
+        version: 1.0.0-beta.3(bare-abort-controller@1.1.0)(bare-buffer@3.6.0)(bare-tcp@2.2.7(bare-abort-controller@1.1.0)(bare-buffer@3.6.0))(bare-url@2.3.2)(typescript@5.9.3)(viem@2.47.2(typescript@5.9.3)(zod@3.25.76))(zod@3.25.76)
+      '@tetherto/wdk-protocol-swap-velora-evm':
+        specifier: 1.0.0-beta.4
+        version: 1.0.0-beta.4(axios@1.13.6)(bare-abort-controller@1.1.0)(bare-buffer@3.6.0)(bare-tcp@2.2.7(bare-abort-controller@1.1.0)(bare-buffer@3.6.0))(bare-url@2.3.2)(typescript@5.9.3)(viem@2.47.2(typescript@5.9.3)(zod@3.25.76))(zod@3.25.76)
+      '@tetherto/wdk-wallet-evm':
+        specifier: 1.0.0-beta.8
+        version: 1.0.0-beta.8(bare-abort-controller@1.1.0)(bare-buffer@3.6.0)(bare-events@2.8.2(bare-abort-controller@1.1.0))(bare-tcp@2.2.7(bare-abort-controller@1.1.0)(bare-buffer@3.6.0))(bare-url@2.3.2)
+      '@tetherto/wdk-wallet-tron':
+        specifier: 1.0.0-beta.4
+        version: 1.0.0-beta.4(bare-abort-controller@1.1.0)(bare-buffer@3.6.0)(bare-events@2.8.2(bare-abort-controller@1.1.0))(bare-tcp@2.2.7(bare-abort-controller@1.1.0)(bare-buffer@3.6.0))(bare-url@2.3.2)
       caishen-lending:
         specifier: workspace:*
         version: link:../packages/skills/caishen-lending
@@ -54,8 +66,8 @@ importers:
         specifier: workspace:*
         version: link:../packages/skills/caishen-wallet
       zod:
-        specifier: ^4.3.6
-        version: 4.3.6
+        specifier: ^3.24.2
+        version: 3.25.76
     devDependencies:
       tsx:
         specifier: ^4.21.0
@@ -2838,6 +2850,10 @@ snapshots:
 
   '@babel/runtime@7.28.6': {}
 
+  '@bgd-labs/aave-address-book@4.33.0(viem@2.47.2(typescript@5.9.3)(zod@3.25.76))':
+    dependencies:
+      viem: 2.47.2(typescript@5.9.3)(zod@3.25.76)
+
   '@bgd-labs/aave-address-book@4.33.0(viem@2.47.2(typescript@5.9.3)(zod@4.3.6))':
     dependencies:
       viem: 2.47.2(typescript@5.9.3)(zod@4.3.6)
@@ -3121,7 +3137,7 @@ snapshots:
       mustache: 4.2.0
       p-queue: 6.6.2
       uuid: 11.1.0
-      zod: 4.3.6
+      zod: 3.25.76
     transitivePeerDependencies:
       - '@opentelemetry/api'
       - '@opentelemetry/exporter-trace-otlp-proto'
@@ -3151,14 +3167,14 @@ snapshots:
       '@langchain/core': 1.1.35(ws@8.19.0)
       react: 18.3.1
 
-  '@langchain/langgraph@1.2.5(@langchain/core@1.1.35(ws@8.19.0))(react@18.3.1)(zod@4.3.6)':
+  '@langchain/langgraph@1.2.5(@langchain/core@1.1.35(ws@8.19.0))(react@18.3.1)(zod@3.25.76)':
     dependencies:
       '@langchain/core': 1.1.35(ws@8.19.0)
       '@langchain/langgraph-checkpoint': 1.0.1(@langchain/core@1.1.35(ws@8.19.0))
       '@langchain/langgraph-sdk': 1.8.0(@langchain/core@1.1.35(ws@8.19.0))(react@18.3.1)
       '@standard-schema/spec': 1.1.0
       uuid: 10.0.0
-      zod: 4.3.6
+      zod: 3.25.76
     transitivePeerDependencies:
       - react
       - react-dom
@@ -3300,6 +3316,13 @@ snapshots:
 
   '@safe-global/safe-modules-deployments@2.2.25': {}
 
+  '@safe-global/types-kit@3.0.0(typescript@5.9.3)(zod@3.25.76)':
+    dependencies:
+      abitype: 1.2.3(typescript@5.9.3)(zod@3.25.76)
+    transitivePeerDependencies:
+      - typescript
+      - zod
+
   '@safe-global/types-kit@3.0.0(typescript@5.9.3)(zod@4.3.6)':
     dependencies:
       abitype: 1.2.3(typescript@5.9.3)(zod@4.3.6)
@@ -3319,7 +3342,7 @@ snapshots:
 
   '@scure/bip32@1.7.0':
     dependencies:
-      '@noble/curves': 1.9.2
+      '@noble/curves': 1.9.7
       '@noble/hashes': 1.8.0
       '@scure/base': 1.2.6
 
@@ -3978,6 +4001,29 @@ snapshots:
       - viem
       - zod
 
+  '@tetherto/wdk-protocol-lending-aave-evm@1.0.0-beta.3(bare-abort-controller@1.1.0)(bare-buffer@3.6.0)(bare-tcp@2.2.7(bare-abort-controller@1.1.0)(bare-buffer@3.6.0))(bare-url@2.3.2)(typescript@5.9.3)(viem@2.47.2(typescript@5.9.3)(zod@3.25.76))(zod@3.25.76)':
+    dependencies:
+      '@bgd-labs/aave-address-book': 4.33.0(viem@2.47.2(typescript@5.9.3)(zod@3.25.76))
+      '@tetherto/wdk-wallet': 1.0.0-beta.7(bare-tcp@2.2.7(bare-abort-controller@1.1.0)(bare-buffer@3.6.0))
+      '@tetherto/wdk-wallet-evm': 1.0.0-beta.8(bare-abort-controller@1.1.0)(bare-buffer@3.6.0)(bare-events@2.8.2(bare-abort-controller@1.1.0))(bare-tcp@2.2.7(bare-abort-controller@1.1.0)(bare-buffer@3.6.0))(bare-url@2.3.2)
+      '@tetherto/wdk-wallet-evm-erc-4337': 1.0.0-beta.5(bare-abort-controller@1.1.0)(bare-buffer@3.6.0)(bare-tcp@2.2.7(bare-abort-controller@1.1.0)(bare-buffer@3.6.0))(bare-url@2.3.2)(typescript@5.9.3)(zod@3.25.76)
+      bare-node-runtime: 1.2.0(bare-tcp@2.2.7(bare-abort-controller@1.1.0)(bare-buffer@3.6.0))
+      ethers: 6.14.3
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-buffer
+      - bare-events
+      - bare-tcp
+      - bare-url
+      - bufferutil
+      - debug
+      - react-native-b4a
+      - sodium-javascript
+      - typescript
+      - utf-8-validate
+      - viem
+      - zod
+
   '@tetherto/wdk-protocol-swap-velora-evm@1.0.0-beta.4(axios@1.13.6)(bare-abort-controller@1.1.0)(bare-buffer@3.6.0)(bare-events@2.8.2(bare-abort-controller@1.1.0))(bare-tcp@2.2.7(bare-abort-controller@1.1.0)(bare-buffer@3.6.0))(bare-url@2.3.2)(typescript@5.9.3)(viem@2.47.2(typescript@5.9.3)(zod@4.3.6))(zod@4.3.6)':
     dependencies:
       '@tetherto/wdk-wallet': 1.0.0-beta.7(bare-tcp@2.2.7(bare-abort-controller@1.1.0)(bare-buffer@3.6.0))
@@ -4003,6 +4049,49 @@ snapshots:
       - web3
       - zod
 
+  '@tetherto/wdk-protocol-swap-velora-evm@1.0.0-beta.4(axios@1.13.6)(bare-abort-controller@1.1.0)(bare-buffer@3.6.0)(bare-tcp@2.2.7(bare-abort-controller@1.1.0)(bare-buffer@3.6.0))(bare-url@2.3.2)(typescript@5.9.3)(viem@2.47.2(typescript@5.9.3)(zod@3.25.76))(zod@3.25.76)':
+    dependencies:
+      '@tetherto/wdk-wallet': 1.0.0-beta.7(bare-tcp@2.2.7(bare-abort-controller@1.1.0)(bare-buffer@3.6.0))
+      '@tetherto/wdk-wallet-evm': 1.0.0-beta.8(bare-abort-controller@1.1.0)(bare-buffer@3.6.0)(bare-events@2.8.2(bare-abort-controller@1.1.0))(bare-tcp@2.2.7(bare-abort-controller@1.1.0)(bare-buffer@3.6.0))(bare-url@2.3.2)
+      '@tetherto/wdk-wallet-evm-erc-4337': 1.0.0-beta.5(bare-abort-controller@1.1.0)(bare-buffer@3.6.0)(bare-tcp@2.2.7(bare-abort-controller@1.1.0)(bare-buffer@3.6.0))(bare-url@2.3.2)(typescript@5.9.3)(zod@3.25.76)
+      '@velora-dex/sdk': 9.0.0(axios@1.13.6)(ethers@6.13.5)(typescript@5.9.3)(viem@2.47.2(typescript@5.9.3)(zod@3.25.76))
+      bare-node-runtime: 1.2.0(bare-tcp@2.2.7(bare-abort-controller@1.1.0)(bare-buffer@3.6.0))
+      ethers: 6.13.5
+    transitivePeerDependencies:
+      - axios
+      - bare-abort-controller
+      - bare-buffer
+      - bare-events
+      - bare-tcp
+      - bare-url
+      - bufferutil
+      - debug
+      - react-native-b4a
+      - sodium-javascript
+      - typescript
+      - utf-8-validate
+      - viem
+      - web3
+      - zod
+
+  '@tetherto/wdk-safe-protocol-kit@6.1.3(ethers@6.14.4)(typescript@5.9.3)(zod@3.25.76)':
+    dependencies:
+      '@safe-global/safe-deployments': 1.37.52
+      '@safe-global/safe-modules-deployments': 2.2.25
+      '@safe-global/types-kit': 3.0.0(typescript@5.9.3)(zod@3.25.76)
+      abitype: 1.2.3(typescript@5.9.3)(zod@3.25.76)
+      ethers: 6.14.4
+      semver: 7.7.4
+      viem: 2.47.2(typescript@5.9.3)(zod@3.25.76)
+    optionalDependencies:
+      '@noble/curves': 1.9.7
+      '@peculiar/asn1-schema': 2.6.0
+    transitivePeerDependencies:
+      - bufferutil
+      - typescript
+      - utf-8-validate
+      - zod
+
   '@tetherto/wdk-safe-protocol-kit@6.1.3(ethers@6.14.4)(typescript@5.9.3)(zod@4.3.6)':
     dependencies:
       '@safe-global/safe-deployments': 1.37.52
@@ -4017,6 +4106,22 @@ snapshots:
       '@peculiar/asn1-schema': 2.6.0
     transitivePeerDependencies:
       - bufferutil
+      - typescript
+      - utf-8-validate
+      - zod
+
+  '@tetherto/wdk-safe-relay-kit@4.1.5(ethers@6.14.4)(typescript@5.9.3)(zod@3.25.76)':
+    dependencies:
+      '@gelatonetwork/relay-sdk': 5.7.0
+      '@safe-global/safe-modules-deployments': 2.2.25
+      '@safe-global/types-kit': 3.0.0(typescript@5.9.3)(zod@3.25.76)
+      '@tetherto/wdk-safe-protocol-kit': 6.1.3(ethers@6.14.4)(typescript@5.9.3)(zod@3.25.76)
+      semver: 7.7.4
+      viem: 2.47.2(typescript@5.9.3)(zod@3.25.76)
+    transitivePeerDependencies:
+      - bufferutil
+      - debug
+      - ethers
       - typescript
       - utf-8-validate
       - zod
@@ -4065,6 +4170,27 @@ snapshots:
   '@tetherto/wdk-wallet-evm-erc-4337@1.0.0-beta.5(bare-abort-controller@1.1.0)(bare-buffer@3.6.0)(bare-events@2.8.2(bare-abort-controller@1.1.0))(bare-tcp@2.2.7(bare-abort-controller@1.1.0)(bare-buffer@3.6.0))(bare-url@2.3.2)(typescript@5.9.3)(zod@4.3.6)':
     dependencies:
       '@tetherto/wdk-safe-relay-kit': 4.1.5(ethers@6.14.4)(typescript@5.9.3)(zod@4.3.6)
+      '@tetherto/wdk-wallet': 1.0.0-beta.7(bare-tcp@2.2.7(bare-abort-controller@1.1.0)(bare-buffer@3.6.0))
+      '@tetherto/wdk-wallet-evm': 1.0.0-beta.8(bare-abort-controller@1.1.0)(bare-buffer@3.6.0)(bare-events@2.8.2(bare-abort-controller@1.1.0))(bare-tcp@2.2.7(bare-abort-controller@1.1.0)(bare-buffer@3.6.0))(bare-url@2.3.2)
+      bare-node-runtime: 1.2.0(bare-tcp@2.2.7(bare-abort-controller@1.1.0)(bare-buffer@3.6.0))
+      ethers: 6.14.4
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-buffer
+      - bare-events
+      - bare-tcp
+      - bare-url
+      - bufferutil
+      - debug
+      - react-native-b4a
+      - sodium-javascript
+      - typescript
+      - utf-8-validate
+      - zod
+
+  '@tetherto/wdk-wallet-evm-erc-4337@1.0.0-beta.5(bare-abort-controller@1.1.0)(bare-buffer@3.6.0)(bare-tcp@2.2.7(bare-abort-controller@1.1.0)(bare-buffer@3.6.0))(bare-url@2.3.2)(typescript@5.9.3)(zod@3.25.76)':
+    dependencies:
+      '@tetherto/wdk-safe-relay-kit': 4.1.5(ethers@6.14.4)(typescript@5.9.3)(zod@3.25.76)
       '@tetherto/wdk-wallet': 1.0.0-beta.7(bare-tcp@2.2.7(bare-abort-controller@1.1.0)(bare-buffer@3.6.0))
       '@tetherto/wdk-wallet-evm': 1.0.0-beta.8(bare-abort-controller@1.1.0)(bare-buffer@3.6.0)(bare-events@2.8.2(bare-abort-controller@1.1.0))(bare-tcp@2.2.7(bare-abort-controller@1.1.0)(bare-buffer@3.6.0))(bare-url@2.3.2)
       bare-node-runtime: 1.2.0(bare-tcp@2.2.7(bare-abort-controller@1.1.0)(bare-buffer@3.6.0))
@@ -4252,6 +4378,17 @@ snapshots:
 
   '@types/uuid@10.0.0': {}
 
+  '@velora-dex/sdk@9.0.0(axios@1.13.6)(ethers@6.13.5)(typescript@5.9.3)(viem@2.47.2(typescript@5.9.3)(zod@3.25.76))':
+    dependencies:
+      '@paraswap/core': 2.4.0
+      ts-essentials: 10.1.1(typescript@5.9.3)
+    optionalDependencies:
+      axios: 1.13.6
+      ethers: 6.13.5
+      viem: 2.47.2(typescript@5.9.3)(zod@3.25.76)
+    transitivePeerDependencies:
+      - typescript
+
   '@velora-dex/sdk@9.0.0(axios@1.13.6)(ethers@6.13.5)(typescript@5.9.3)(viem@2.47.2(typescript@5.9.3)(zod@4.3.6))':
     dependencies:
       '@paraswap/core': 2.4.0
@@ -4262,6 +4399,11 @@ snapshots:
       viem: 2.47.2(typescript@5.9.3)(zod@4.3.6)
     transitivePeerDependencies:
       - typescript
+
+  abitype@1.2.3(typescript@5.9.3)(zod@3.25.76):
+    optionalDependencies:
+      typescript: 5.9.3
+      zod: 3.25.76
 
   abitype@1.2.3(typescript@5.9.3)(zod@4.3.6):
     optionalDependencies:
@@ -5614,6 +5756,21 @@ snapshots:
     dependencies:
       mimic-fn: 2.1.0
 
+  ox@0.14.0(typescript@5.9.3)(zod@3.25.76):
+    dependencies:
+      '@adraffy/ens-normalize': 1.11.1
+      '@noble/ciphers': 1.3.0
+      '@noble/curves': 1.9.1
+      '@noble/hashes': 1.8.0
+      '@scure/bip32': 1.7.0
+      '@scure/bip39': 1.6.0
+      abitype: 1.2.3(typescript@5.9.3)(zod@3.25.76)
+      eventemitter3: 5.0.1
+    optionalDependencies:
+      typescript: 5.9.3
+    transitivePeerDependencies:
+      - zod
+
   ox@0.14.0(typescript@5.9.3)(zod@4.3.6):
     dependencies:
       '@adraffy/ens-normalize': 1.11.1
@@ -6083,6 +6240,23 @@ snapshots:
     dependencies:
       safe-buffer: 5.2.1
 
+  viem@2.47.2(typescript@5.9.3)(zod@3.25.76):
+    dependencies:
+      '@noble/curves': 1.9.1
+      '@noble/hashes': 1.8.0
+      '@scure/bip32': 1.7.0
+      '@scure/bip39': 1.6.0
+      abitype: 1.2.3(typescript@5.9.3)(zod@3.25.76)
+      isows: 1.0.7(ws@8.18.3)
+      ox: 0.14.0(typescript@5.9.3)(zod@3.25.76)
+      ws: 8.18.3
+    optionalDependencies:
+      typescript: 5.9.3
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+      - zod
+
   viem@2.47.2(typescript@5.9.3)(zod@4.3.6):
     dependencies:
       '@noble/curves': 1.9.1
@@ -6147,4 +6321,5 @@ snapshots:
 
   zod@3.25.76: {}
 
-  zod@4.3.6: {}
+  zod@4.3.6:
+    optional: true
